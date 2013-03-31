@@ -133,6 +133,7 @@ module Tire
       end
 
       params[:parent]  = options[:parent]  if options[:parent]
+      parent = get_parent_from_document(document) if params[:parent].nil?
       params[:routing] = options[:routing] if options[:routing]
       params[:replication] = options[:replication] if options[:replication]
 
@@ -475,6 +476,18 @@ module Tire
           document[:_id] || document['_id'] || document[:id] || document['id']
         when document.respond_to?(:id) && document.id != document.object_id
           document.id.as_json
+      end
+      $VERBOSE = old_verbose
+      id
+    end
+    
+    def get_parent_from_document(document)
+      old_verbose, $VERBOSE = $VERBOSE, nil # Silence Object#id deprecation warnings
+      id = case
+        when document.is_a?(Hash)
+          document[:parent] || document['parent']
+        when document.respond_to?(:parent)
+          document.parent
       end
       $VERBOSE = old_verbose
       id
