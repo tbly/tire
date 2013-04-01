@@ -122,6 +122,7 @@ module Tire
 
       id       = get_id_from_document(document)
       type     = get_type_from_document(document)
+      parent   = get_parent_from_document(document)
       document = convert_document_to_json(document)
 
       options ||= {}
@@ -133,7 +134,7 @@ module Tire
       end
 
       params[:parent]  = options[:parent]  if options[:parent]
-      parent = get_parent_from_document(document) if params[:parent].nil?
+      params[:parent] = parent if params[:parent].nil?
       params[:routing] = options[:routing] if options[:routing]
       params[:replication] = options[:replication] if options[:replication]
 
